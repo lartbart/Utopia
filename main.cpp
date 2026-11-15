@@ -9,20 +9,23 @@
 
 #ifdef BACKEND_X11
     #include "backend/x11backend.h"
-    using SelectedBackend = X11Backend;
+	#include "backend/alsabackend.h"
+    using SelectedDisplayBackend = X11Backend;
+	using SelectedAudioBackend = AlsaBackend;
 #elif defined(BACKEND_OTHER)
     #include "backend/otherbackend.h"
-    using SelectedBackend = OtherBackend;
+    using SelectedDisplayBackend = OtherBackend;
 #else
     #error "Define a backend, example: -DBACKEND_X11"
 #endif
 
 int main(int argc, char* argv[]) {
-	DisplayBackend* backend = new SelectedBackend();
-	backend->init();
+	DisplayBackend* displaybackend = new SelectedDisplayBackend();
+	displaybackend->init();
+	AudioBackend* audiobackend = new SelectedAudioBackend();
 	Canvas& canvas = Canvas::getInstance();
 	canvas.setCanvasSize(320,240);
-	backend->setCanvasImage(canvas.canvas_image);
+	displaybackend->setCanvasImage(canvas.canvas_image);
 	EventServer& eventserver = EventServer::getInstance();
 	
 	Scene scene1;
@@ -41,11 +44,12 @@ int main(int argc, char* argv[]) {
 		}
 		if (std::string(argv[8]) == "setPosition") {
 			if (std::string(argv[9]) == "MousePositionX" && std::string(argv[10]) == "MousePositionY") {
-				sprite->event_function = [&sprite, &backend]() 
+				sprite->event_function = [&sprite, &displaybackend, &audiobackend]() 
 				{
 					sprite->setPosition(
-						backend->events_array[0] - (sprite->image.width/2), 
-						backend->events_array[1] - (sprite->image.height/2));
+						displaybackend->events_array[0] - (sprite->image.width/2), 
+						displaybackend->events_array[1] - (sprite->image.height/2));
+					audiobackend->play("audio.wav");
 				};				
 			}
 			else {
@@ -56,7 +60,7 @@ int main(int argc, char* argv[]) {
 			}
 		}
 	}
-	scene1.run = [&canvas, &backend, &argv](const Event& event) {
+	scene1.run = [&canvas, &displaybackend, &argv](const Event& event) {
 		if (event.object->name == std::string(argv[2])) {
 				if (event.type == None) {
 					if (VisualObject* object = dynamic_cast<VisualObject*>(event.object)) {
@@ -73,9 +77,9 @@ int main(int argc, char* argv[]) {
 	};
 
 	while (true) {
-		backend->getNextEvent();
+		displaybackend->getNextEvent();
 		for (int i = 0; i < scene1.scene_objects.size(); i++) {
-			Event processed_events = eventserver.processEvents(backend->events_array, scene1.scene_objects[i]);
+			Event processed_events = eventserver.processEvents(displaybackend->events_array, scene1.scene_objects[i]);
 			scene1.run(processed_events);
 		}
 	}
