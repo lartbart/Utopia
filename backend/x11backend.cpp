@@ -59,37 +59,37 @@ void X11Backend::drawCanvas() {
 	XFlush(display);	
 }
 
-void X11Backend::getNextEvent() {
-		XNextEvent(display, &event);
-		if (event.type == Expose) {
-			drawCanvas();
-		}
-		if (event.type == MotionNotify) {
-			events_array[0] = event.xmotion.x;
-            events_array[1] = event.xmotion.y;
-            drawCanvas();
-		}
-		if (event.type == ButtonPress) {
-			if (event.xbutton.button == Button1) events_array[2] = event.xbutton.button;
-			if (event.xbutton.button == Button2) events_array[3] = event.xbutton.button;
-			if (event.xbutton.button == Button3) events_array[4] = event.xbutton.button;
-			if (event.xbutton.button == Button4) events_array[5] = event.xbutton.button;
-			if (event.xbutton.button == Button5) events_array[6] = event.xbutton.button;
-			drawCanvas();
-		}
-		if (event.type == ButtonRelease) {
-			if (event.xbutton.button == Button1) events_array[2] = !event.xbutton.button;
-			if (event.xbutton.button == Button2) events_array[3] = !event.xbutton.button;
-			if (event.xbutton.button == Button3) events_array[4] = !event.xbutton.button;
-			if (event.xbutton.button == Button4) events_array[5] = !event.xbutton.button;
-			if (event.xbutton.button == Button5) events_array[6] = !event.xbutton.button;
-			drawCanvas();
-		}
+bool X11Backend::getNextEvent() {
+	XNextEvent(display, &event);
+	if (event.type == Expose) {
+		drawCanvas();
+	}
+	if (event.type == MotionNotify) {
+		events_array[0] = event.xmotion.x;
+        events_array[1] = event.xmotion.y;
+        drawCanvas();
+	}
+	if (event.type == ButtonPress) {
+		if (event.xbutton.button == Button1) events_array[2] = event.xbutton.button;
+		if (event.xbutton.button == Button2) events_array[3] = event.xbutton.button;
+		if (event.xbutton.button == Button3) events_array[4] = event.xbutton.button;
+		if (event.xbutton.button == Button4) events_array[5] = event.xbutton.button;
+		if (event.xbutton.button == Button5) events_array[6] = event.xbutton.button;
+		drawCanvas();
+	}
+	if (event.type == ButtonRelease) {
+		if (event.xbutton.button == Button1) events_array[2] = !event.xbutton.button;
+		if (event.xbutton.button == Button2) events_array[3] = !event.xbutton.button;
+		if (event.xbutton.button == Button3) events_array[4] = !event.xbutton.button;
+		if (event.xbutton.button == Button4) events_array[5] = !event.xbutton.button;
+		if (event.xbutton.button == Button5) events_array[6] = !event.xbutton.button;
+		drawCanvas();
+	}
+	return true;
 }
 
-void X11Backend::setCanvasImage(CanvasImage canvas)
-{
-		ximg = XShmCreateImage(
+void X11Backend::setCanvasImage(CanvasImage canvas) {
+	ximg = XShmCreateImage(
 		display,
 		vinfo.visual,
 		vinfo.depth,

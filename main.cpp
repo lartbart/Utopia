@@ -9,12 +9,14 @@
 
 #ifdef BACKEND_X11
     #include "backend/x11backend.h"
-	#include "backend/alsabackend.h"
     using SelectedDisplayBackend = X11Backend;
+	#include "backend/alsabackend.h"
 	using SelectedAudioBackend = AlsaBackend;
-#elif defined(BACKEND_OTHER)
-    #include "backend/otherbackend.h"
-    using SelectedDisplayBackend = OtherBackend;
+#elif defined(BACKEND_FRAMEBUFFER)
+    #include "backend/framebufferbackend.h"
+    using SelectedDisplayBackend = FramebufferBackend;
+	#include "backend/alsabackend.h"
+	using SelectedAudioBackend = AlsaBackend;
 #else
     #error "Define a backend, example: -DBACKEND_X11"
 #endif

@@ -18,8 +18,9 @@ void Canvas::setCanvasSize(int width, int height) {
 }
 
 void Canvas::drawNonPersistentCanvas(VisualObject* object) {
-		pixels.assign(static_cast<size_t>(canvas_image.width) * canvas_image.height, 0);
-		pixman_image_t* dest = pixman_image_create_bits(
+	pixels.assign(static_cast<size_t>(canvas_image.width) * canvas_image.height, 0);
+	
+	pixman_image_t* dest = pixman_image_create_bits(
 		PIXMAN_a8r8g8b8,
 		this->canvas_image.width,
 		this->canvas_image.height,

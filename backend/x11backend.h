@@ -17,7 +17,7 @@ class X11Backend : public DisplayBackend{
 		~X11Backend() override = default;
 		void init() override;
 		void drawCanvas() override;
-		void getNextEvent() override;
+		bool getNextEvent() override;
 		void setCanvasImage(CanvasImage canvas) override;
 	private:
 		Display* display = nullptr;
@@ -27,7 +27,7 @@ class X11Backend : public DisplayBackend{
 		XImage* ximg = nullptr;
 		size_t src_stride = 0;
 		size_t dst_stride = 0;
-		XShmSegmentInfo shm = {};
+		XShmSegmentInfo shm;
 		XEvent event;
-		CanvasImage backend_canvas = {};
+		CanvasImage backend_canvas;
 };
