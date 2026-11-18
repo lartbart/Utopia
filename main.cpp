@@ -37,25 +37,28 @@ int main(int argc, char* argv[]) {
 		Image image;
 		image.loadPNG(argv[3]);
 		sprite->image = image;
-		sprite->x = std::stoi(argv[4]);
-		sprite->y = std::stoi(argv[5]);	
-		sprite->z = std::stoi(argv[6]);
+		Sound sound;
+		sound.loadAudio(argv[4]);
+		sprite->sound = sound;
+		sprite->x = std::stoi(argv[5]);
+		sprite->y = std::stoi(argv[6]);	
+		sprite->z = std::stoi(argv[7]);
 		scene1.scene_objects.push_back(sprite);
-		if (std::string(argv[7]) == "Pressed") {
+		if (std::string(argv[8]) == "Pressed") {
 			sprite->event_type = 1;
 		}
-		if (std::string(argv[8]) == "setPosition") {
-			if (std::string(argv[9]) == "MousePositionX" && std::string(argv[10]) == "MousePositionY") {
+		if (std::string(argv[9]) == "setPosition") {
+			if (std::string(argv[10]) == "MousePositionX" && std::string(argv[11]) == "MousePositionY") {
 				sprite->event_function = [&sprite, &displaybackend, &audiobackend]() 
 				{
 					sprite->setPosition(
 						displaybackend->events_array[0] - (sprite->image.width/2), 
 						displaybackend->events_array[1] - (sprite->image.height/2));
-					audiobackend->play("audio.wav");
+					audiobackend->play(sprite->sound.audio_data);
 				};				
 			}
 			else {
-				sprite->event_function = [&sprite, x = std::stoi(argv[9]), y = std::stoi(argv[10])]() 
+				sprite->event_function = [&sprite, x = std::stoi(argv[10]), y = std::stoi(argv[11])]() 
 				{
 					sprite->setPosition(x, y);
 				};
@@ -71,9 +74,9 @@ int main(int argc, char* argv[]) {
 				}
 				if (event.type == event.object->event_type) {
 					if (VisualObject* object = dynamic_cast<VisualObject*>(event.object)) {
-						object->event_function();
 						canvas.drawNonPersistentCanvas(object);		
 					}
+					event.object->event_function();
 				}
 			}
 	};

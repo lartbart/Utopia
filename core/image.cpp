@@ -47,5 +47,5 @@ void Image::loadPNG(const char* file) {
         data[i + 3] = a;
     }
 
-	this->image_data =  reinterpret_cast<uint32_t*>(data);
+	this->image_data = reinterpret_cast<uint32_t*>(data);
 }
