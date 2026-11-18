@@ -6,7 +6,8 @@
 
 enum EventType {
 	None,
-	Pressed
+	Pressed,
+	Hover
 };
 
 struct Event {
